@@ -43,8 +43,8 @@ for filename in os.listdir(SCRIPT_DIR):
         continue
     filename = os.path.join(SCRIPT_DIR, filename)
     if os.path.isfile(filename) and os.access(filename, os.X_OK):
-        sudo = bool(SUDO_PREFIX.search(filename))
-        task = ScriptTask(filename, sudo=sudo)
+        task_is_sudo = bool(SUDO_PREFIX.search(filename))
+        task = ScriptTask(filename, sudo=task_is_sudo)
         tasks[task.name] = task
 
 for task_name, task in tasks.iteritems():
