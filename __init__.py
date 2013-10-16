@@ -3,6 +3,7 @@ import os
 import os.path
 import re
 import importlib
+import types
 
 import fabric.api
 import fabric.tasks
@@ -19,9 +20,11 @@ def collect_pytasks(filename):
         if '' not in sys.path:
             sys.path.insert(0, '')
         mod = importlib.import_module(name)
-        for fun in mod.pytasks:
-            task_name = fun.func_name
-            tasks[task_name] = PythonTask(filename, name, fun.func_name)
+        for fun_name in mod.__dict__:
+            if not fun_name.startswith('_'):
+                fun = getattr(mod, fun_name)
+                if isinstance(fun, types.FunctionType):
+                    tasks[fun_name] = PythonTask(filename, name, fun_name)
     finally:
         os.chdir(d)
     
@@ -51,8 +54,7 @@ class ScriptTask(fabric.tasks.Task):
                 self.script_path,
                 self.remote_path,
                 mirror_local_mode=True,
-                use_sudo=self.sudo
-        )
+                use_sudo=self.sudo)
             
 class PythonTask(ScriptTask):
 
