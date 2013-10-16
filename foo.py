@@ -1,7 +1,6 @@
-from pytask import task
+import platform
 
-@task
 def y():
     print('Function foo.y')
-
+    print(platform.uname())
     
