@@ -65,22 +65,18 @@ class PythonTask(ScriptTask):
 
     def run(self):
         fabric.api.put(
-            os.path.join(self.base_dir, 'pytask.py'),
-            '/tmp/pytask.py',
-            mirror_local_mode=True)
-        fabric.api.put(
-            os.path.join(self.base_dir, 'executer.py'),
-            '/tmp/executer.py',
+            os.path.join(self.base_dir, '__executer.py'),
+            '/tmp/__executer.py',
             mirror_local_mode=True)
         self.put()
-        fabric.api.run('/tmp/executer.py {} {}'.format(self.module, self.fun))
+        fabric.api.run('/tmp/__executer.py {} {}'.format(self.module, self.fun))
         
 
 __all__ = []
 tasks = {}
 
 for filename in os.listdir(SCRIPT_DIR):
-    if filename in ["__init__.py", "pytask.py", "executer.py"]:
+    if filename.startswith('__'):
         continue
     filename = os.path.join(SCRIPT_DIR, filename)
     if os.path.isfile(filename):
