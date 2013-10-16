@@ -80,7 +80,7 @@ __all__ = []
 tasks = {}
 
 for filename in os.listdir(SCRIPT_DIR):
-    if filename in ["__init__.py", "pytask.py"]:
+    if filename in ["__init__.py", "pytask.py", "executer.py"]:
         continue
     filename = os.path.join(SCRIPT_DIR, filename)
     if os.path.isfile(filename):
