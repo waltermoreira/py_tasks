@@ -1,3 +1,4 @@
+import sys
 import os
 import os.path
 import re
@@ -15,9 +16,11 @@ def collect_pytasks(filename):
     try:
         os.chdir(os.path.dirname(filename))
         name, _ = os.path.splitext(os.path.basename(filename))
+        if '' not in sys.path:
+            sys.path.insert(0, '')
         mod = importlib.import_module(name)
         for fun in mod.pytasks:
-            task_name = '.'.join([mod, fun.func_name])
+            task_name = fun.func_name
             tasks[task_name] = PythonTask(filename, name, fun.func_name)
     finally:
         os.chdir(d)
@@ -57,14 +60,16 @@ class PythonTask(ScriptTask):
         super(PythonTask, self).__init__(filename, sudo=sudo)
         self.module = module
         self.fun = fun
+        self.name = self.fun
+        self.base_dir = os.path.dirname(filename)
 
     def run(self):
         fabric.api.put(
-            'pytask.py',
+            os.path.join(self.base_dir, 'pytask.py'),
             '/tmp/pytask.py',
             mirror_local_mode=True)
         fabric.api.put(
-            'executer.py',
+            os.path.join(self.base_dir, 'executer.py'),
             '/tmp/executer.py',
             mirror_local_mode=True)
         self.put()

@@ -7,6 +7,7 @@ import importlib
 def main(module, fun):
     d = os.getcwd()
     try:
+        mydir = os.path.dirname(os.path.realpath(__file__))
         print mydir
         os.chdir(mydir)
         mod = importlib.import_module(module)
