@@ -4,6 +4,7 @@ import os.path
 import re
 import importlib
 import types
+import glob
 
 import fabric.api
 import fabric.tasks
@@ -67,7 +68,7 @@ class PythonTask(ScriptTask):
 
     def run(self):
         fabric.api.put(
-            os.path.join(self.base_dir, '__executer.py'),
+            os.path.join(SCRIPT_DIR, '__executer.py'),
             '/tmp/__executer.py',
             mirror_local_mode=True)
         self.put()
@@ -86,8 +87,13 @@ for filename in os.listdir(SCRIPT_DIR):
         if os.access(filename, os.X_OK):        
             task = ScriptTask(filename, sudo=task_is_sudo)
             tasks[task.name] = task
-        elif filename.endswith('.py'):
-            collect_pytasks(filename)
+
+pys = os.path.join(SCRIPT_DIR, '../*.py')
+for filename in glob.glob(pys):
+    if filename.endswith('fabfile.py'):
+        continue
+    # Collect all py_tasks of Python files outside the package
+    collect_pytasks(os.path.abspath(filename))
 
 
 for task_name, task in tasks.iteritems():
