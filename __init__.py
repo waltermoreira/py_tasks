@@ -91,7 +91,7 @@ for filename in os.listdir(SCRIPT_DIR):
 
 pys = os.path.join(SCRIPT_DIR, '../*.py')
 for filename in glob.glob(pys):
-    if filename.endswith('fabfile.py'):
+    if filename.startswith('_') or filename.endswith('fabfile.py'):
         continue
     # Collect all py_tasks of Python files outside the package
     collect_pytasks(os.path.abspath(filename))
