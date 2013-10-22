@@ -72,8 +72,8 @@ class PythonTask(ScriptTask):
             '/tmp/__executer.py',
             mirror_local_mode=True)
         self.put()
-        fabric.api.run('/tmp/__executer.py {} {} {}'.
-                       format(self.module, self.fun, ' '.join(args)))
+        return fabric.api.run('/tmp/__executer.py {} {} {}'.
+                              format(self.module, self.fun, ' '.join(args)))
         
 
 __all__ = []
