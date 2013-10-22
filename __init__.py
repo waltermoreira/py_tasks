@@ -66,13 +66,14 @@ class PythonTask(ScriptTask):
         self.name = self.fun
         self.base_dir = os.path.dirname(filename)
 
-    def run(self):
+    def run(self, *args):
         fabric.api.put(
             os.path.join(SCRIPT_DIR, '__executer.py'),
             '/tmp/__executer.py',
             mirror_local_mode=True)
         self.put()
-        fabric.api.run('/tmp/__executer.py {} {}'.format(self.module, self.fun))
+        fabric.api.run('/tmp/__executer.py {} {} {}'.
+                       format(self.module, self.fun, ' '.join(args)))
         
 
 __all__ = []
