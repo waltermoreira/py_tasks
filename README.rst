@@ -28,4 +28,4 @@ Run as::
 
    fab -H localhost,remote_host py_tasks.foo
    
-Compose it with other functions in your `fabfile` by using the name `py_tasks.foo`.
+Compose it with other functions in your ``fabfile`` by using the name ``py_tasks.foo``.
